@@ -1,8 +1,8 @@
 name: 'Setup Vulkan SDK'
 description: 'Automatically builds Vulkan SDK components from source.'
 branding:
-  icon: 'play'  
-  color: 'red'  
+  icon: 'play'
+  color: 'red'
 inputs:
   vulkan-config-file:
     description: 'Vulkan SDK configuration path (prefer this to relying on vulkan-query-version lookup)'
@@ -26,7 +26,7 @@ inputs:
     required: false
 runs:
   using: "composite"
-  steps: 
+  steps:
     - uses: humbletim/vsdevenv-shell@e87fcf2359929606ba32db358baef5ede4737aed
 
     - name: Resolve Vulkan SDK Configuration
@@ -44,14 +44,8 @@ runs:
       run: |
         # dev prerequisites
         case `uname -s` in
-          Darwin) 
-            brew install gnu-sed
-            echo "/usr/local/opt/gnu-sed/libexec/gnubin" >> $GITHUB_PATH
-          ;;
-          Linux) 
-            sudo apt-get -qq update 
-            sudo apt-get -qq install -y libwayland-dev libxrandr-dev
-          ;;
+          Darwin) ;;
+          Linux) ;;
           MINGW*) ;;
         esac
 
@@ -61,7 +55,7 @@ runs:
       run: |
         # cache-key.txt
         . $PWD/_vulkan_build/env
-        ( 
+        (
           echo VULKAN_SDK_CONFIG_FILE=$(sha256sum $VULKAN_SDK_CONFIG_FILE || openssl sha256 $VULKAN_SDK_CONFIG_FILE)
           echo VULKAN_SDK_CONFIG_VERSION=$VULKAN_SDK_CONFIG_VERSION
           echo VULKAN_SDK_COMPONENTS=\"$VULKAN_SDK_COMPONENTS\"
