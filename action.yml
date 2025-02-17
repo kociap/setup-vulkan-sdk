@@ -39,16 +39,6 @@ runs:
           "${{ inputs.vulkan-config-file }}" \
           "${{ inputs.vulkan-components }}"
 
-    - name: Configure Development Environment Prerequisites
-      shell: bash
-      run: |
-        # dev prerequisites
-        case `uname -s` in
-          Darwin) ;;
-          Linux) ;;
-          MINGW*) ;;
-        esac
-
     - name: Generate cache key
       if: inputs.vulkan-use-cache != 'false'
       shell: bash
