@@ -113,9 +113,11 @@ message("---------------------------------------------------------------------")
 # C++ modules are not supported by make.
 set(VULKAN_HEADERS_ENABLE_MODULE OFF)
 set(VULKAN_HEADERS_ENABLE_INSTALL ON)
+# Do not build additional shaderc targets.
 set(SHADERC_SKIP_TESTS ON)
-set(SHADERC_ENABLE_SHARED_CRT ON)
+set(SHADERC_SKIP_EXAMPLES ON)
 set(SHADERC_SKIP_COPYRIGHT_CHECK ON)
+set(SHADERC_ENABLE_SHARED_CRT ON)
 
 foreach(PACKAGE_NAME ${VULKAN_SDK_COMPONENTS})
   setup_component(${PACKAGE_NAME})
