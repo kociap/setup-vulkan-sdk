@@ -84,7 +84,8 @@ function(setup_component PACKAGE_NAME)
     # Run the python script. By default it stores the downloaded source in the
     # 'src' subdirectory within the directory of the package.
     execute_process(COMMAND python ${SCRIPT_FILENAME}
-                    WORKING_DIRECTORY ${PACKAGE_SOURCE_DIRECTORY})
+                    WORKING_DIRECTORY ${PACKAGE_SOURCE_DIRECTORY}
+                    OUTPUT_QUIET)
     add_subdirectory("${PACKAGE_SOURCE_DIRECTORY}/src" "${PACKAGE_BINARY_DIRECTORY}")
   endif()
 endfunction()
