@@ -1,13 +1,9 @@
 cmake_minimum_required(VERSION 3.19)
 # note: 3.19+ needed for JSON parsing
 
-# json_get_subprops("${_json}" [key,key...] PROPERTIES property [property...])
-function(json_get_subprops _json)
-    cmake_parse_arguments(_sub "" "" "PROPERTIES" ${ARGN})
-    foreach(arg IN LISTS _sub_PROPERTIES)
-        string(JSON value ERROR_VARIABLE jsonerror GET "${_json}" ${_sub_UNPARSED_ARGUMENTS} "${arg}")
-        set(${arg} ${value} PARENT_SCOPE)
-    endforeach()
+function(json_get outvar json)
+  string(JSON json_result ERROR_VARIABLE _ERROR GET ${json} ${ARGN})
+  set(${outvar} ${json_result} PARENT_SCOPE)
 endfunction()
 
 # example: coalesce(VAR first second third) -> first truthy value found
@@ -50,12 +46,12 @@ endfunction()
 # examples:
 #   # evaluate cmake code block for each key-value pair
 #   json_foreach("${_json}" "key1;key2" "message(subproperty key={0} value={1})")
-# 
+#
 #   function(callback key value userValue)
 #     message("subproperty key=${key} value=${value} userValue=${userValue}")
 #   endfunction()
 #   # evaluate specific member key-value pairs
-#   json_foreach("${_json}" "key1;key2" callback "myuservalue")  
+#   json_foreach("${_json}" "key1;key2" callback "myuservalue")
 #   # enumerate top-level key-value pairs
 #   json_foreach("${_json}" "" callback)
 function(json_foreach _json _objectName _functionOrEval _userValue)
@@ -78,15 +74,5 @@ function(json_foreach _json _objectName _functionOrEval _userValue)
       # message("evaluating as function: ${_functionOrEval}(${_key} ${_value} ${_userValue})")
       cmake_language(CALL ${_functionOrEval} ${_key} ${_value} "${_userValue}")
     endif()
-  endforeach()
-endfunction()
-
-# resolve global properties into corresponding ~local variables
-# eg: get_component_props(Vulkan-Headers cmake_extra patch_command)
-#     message("cmake_extra=${cmake_extra} patch_command=${patch_command}")
-function(get_component_props _comp)
-  foreach(_arg ${ARGN})
-    get_property(_value GLOBAL PROPERTY "${_comp}_${_arg}")
-    set(${_arg} "${_value}" PARENT_SCOPE)
   endforeach()
 endfunction()
