@@ -136,4 +136,4 @@ runs:
         ) | tee -a $GITHUB_ENV
         echo ${VULKAN_SDK}/bin | tee -a $GITHUB_PATH
         rm -rf $PWD/_vulkan_build
-        du -hs ${VULKAN_SDK}
+        echo "Vulkan SDK size: $(du -sh ${VULKAN_SDK} | cut -f 1)"
