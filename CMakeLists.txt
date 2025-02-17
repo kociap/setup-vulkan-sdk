@@ -31,11 +31,6 @@ endif()
 
 project(VulkanSDKComponents)
 
-function(json_get outvar json)
-  string(JSON json_result ERROR_VARIABLE _ERROR GET ${json} ${ARGN})
-  set(${outvar} ${json_result} PARENT_SCOPE)
-endfunction()
-
 function(setup_component PACKAGE_NAME)
   if (TARGET ${PACKAGE_NAME})
     return()
@@ -49,13 +44,8 @@ function(setup_component PACKAGE_NAME)
   json_coalesce_subprops("${VULKAN_SDK_CONFIG_CONTENT}" ref "repos" "${PACKAGE_NAME}" PROPERTIES commit tag branch)
   set(PACKAGE_VERSION ${ref})
 
-  # Process config.json dependencies first
+  # Process config.json dependencies.
   json_foreach("${PACKAGE_DEPENDENCIES}" "" setup_component ${PACKAGE_NAME})
-  # then any override deps_extra's
-  get_component_props(${PACKAGE_NAME} deps_extra)
-  foreach(kv ${deps_extra})
-    setup_component(${kv} ${PACKAGE_NAME})
-  endforeach()
 
   message(STATUS "Fetching ${PACKAGE_NAME} ${PACKAGE_VERSION} from ${PACKAGE_URL}")
   FetchContent_Declare(${PACKAGE_NAME}
