@@ -33,7 +33,7 @@ runs:
       shell: bash
       run: |
         # resolve_vulkan_sdk_environment
-        . $GITHUB_ACTION_PATH/action_helpers.sh
+        source $GITHUB_ACTION_PATH/action_helpers.sh
         resolve_vulkan_sdk_environment \
           "${{ inputs.vulkan-query-version }}" \
           "${{ inputs.vulkan-config-file }}" \
@@ -65,12 +65,12 @@ runs:
       shell: bash
       run: |
         # vulkan tools prereq
-        . $GITHUB_ACTION_PATH/action_helpers.sh
-        . $PWD/_vulkan_build/env
+        source $GITHUB_ACTION_PATH/action_helpers.sh
+        source $PWD/_vulkan_build/env
         configure_sdk_prereqs $PWD/_vulkan_build/tools
         echo PATH=$PWD/_vulkan_build/tools/bin:\$PATH >> $PWD/_vulkan_build/env
-        echo "$VULKAN_SDK_BUILD_DIR/env:"
         echo "--------------------------------------------------------------"
+        echo "$VULKAN_SDK_BUILD_DIR/env:"
         cat $VULKAN_SDK_BUILD_DIR/env
         echo "--------------------------------------------------------------"
 
@@ -80,7 +80,7 @@ runs:
       run: |
         # cmake configure
         set -a
-        . $PWD/_vulkan_build/env
+        source $PWD/_vulkan_build/env
         if [[ $RUNNER_OS == 'Windows' ]] ; then
           CC=cl.exe
           CXX=cl.exe
@@ -98,7 +98,7 @@ runs:
       run: |
         # cmake build
         set -a
-        . $PWD/_vulkan_build/env
+        source $PWD/_vulkan_build/env
         cmake --build ${VULKAN_SDK_BUILD_DIR} --config ${{ inputs.build-config }} --parallel 8
 
     - name: Install Vulkan SDK Components
@@ -107,16 +107,16 @@ runs:
       run: |
         # cmake install
         set -a
-        . $PWD/_vulkan_build/env
+        source $PWD/_vulkan_build/env
         cmake --install ${VULKAN_SDK_BUILD_DIR} --config ${{ inputs.build-config }}
 
     - name: Verify Vulkan SDK Installation
       shell: bash
       run: |
         # verify VULKAN_SDK
-        . $PWD/_vulkan_build/env
+        source $PWD/_vulkan_build/env
         test -s ${VULKAN_SDK}/sdk.env
-        . ${VULKAN_SDK}/sdk.env
+        source ${VULKAN_SDK}/sdk.env
         if [[ -d "${VULKAN_SDK}" && -n "${VULKAN_SDK_VERSION}" ]] ; then
           echo "Vulkan SDK v${VULKAN_SDK_VERSION} successfully installed into ${VULKAN_SDK}."
         else
@@ -128,8 +128,8 @@ runs:
       shell: bash
       run: |
         # export vulkan env vars
-        . $PWD/_vulkan_build/env
-        . ${VULKAN_SDK}/sdk.env
+        source $PWD/_vulkan_build/env
+        source ${VULKAN_SDK}/sdk.env
         (
           echo VULKAN_SDK=${VULKAN_SDK}
           echo VULKAN_SDK_VERSION=${VULKAN_SDK_VERSION}
