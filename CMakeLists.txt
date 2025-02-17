@@ -15,7 +15,7 @@
 cmake_minimum_required(VERSION 3.19)
 
 include(FetchContent)
-include(cmake/json_utils.cmake)
+include(cmake/json.cmake)
 
 if(NOT VULKAN_SDK)
   message(FATAL_ERROR
