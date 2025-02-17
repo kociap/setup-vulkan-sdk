@@ -13,6 +13,9 @@ Khronos source usually require around a minute to build and only approximately
 require). The action utilises the GitHub cache mechanism to accelerate
 subsequent builds.
 
+All versions of the Vulkan SDK are supported. Any components provided by a
+Vulkan SDK release may be built.
+
 ## Usage
 
 _NOTE: For help with GitHub Actions, see GitHub Help Documentation
@@ -35,8 +38,8 @@ All SDK releases are supported. SDK version numbers are resolved into
 corresponding Khronos repos and commit points using the official LunarG [SDK
 web API](https://vulkan.lunarg.com/content/view/latest-sdk-version-api).
 
-It is also possible to specify `latest` and the action will attempt to resolve
-automatically.
+It is also possible to specify `latest` and the action will build the most
+recent release of the Vulkan SDK.
 
 ## Action Parameters
 
@@ -46,15 +49,16 @@ automatically.
   default: '']*
   - note: config.json files already contain versioning info, so when specified
     vulkan-query-version will be ignored
-- **`vulkan-use-cache`**: if `true` the VULKAN_SDK folder is cached and
-  restored across builds. *[optional; default=false]*
+- **`vulkan-use-cache`**: if `true`, after a successful build the VULKAN_SDK
+  folder is cached and restored in subsequent builds. *[optional;
+  default=false]*
 - **`vulkan-components`**: a space or comma delimited list of individual Vulkan
   component selections *[required]*:
 
-Officially supported release numbers can be found here:
+Officially supported release numbers may be found here:
 https://vulkan.lunarg.com/sdk/home
 
-Documentation on querying config.json SDK specs can be found here:
+Documentation on querying config.json SDK specs may be found here:
 https://vulkan.lunarg.com/content/view/latest-sdk-version-api
 
 ## Advanced integration
@@ -73,9 +77,9 @@ https://vulkan.lunarg.com/content/view/latest-sdk-version-api
       vulkan-use-cache: true
 ```
 
-To "lock in" the Khronos repos and commit points (and avoid any ongoing
-dependency on LunarG web services), commit a copy of the config.json(s) into
-your local project and then reference them similarly to above.
+To "lock in" the versions of the Khronos repositories (and avoid any
+dependency on LunarG web services), commit a copy of the config.json(s) to
+your project and then reference them in your actions, as show above.
 
 <!-- Additional integration examples can be found as part of this project's CI test -->
 <!-- suite: [.github/workflows/ci.yml](.github/workflows/ci.yml). -->
