@@ -1,15 +1,13 @@
-# Vulkan SDK config.json cmake wrapper
-# 2022.02.16 humbletim MIT license
-# see: https://github.com/humbletim/setup-vulkan-sdk
-
-# cmake variables:
-#  -DVULKAN_SDK -- where to install SDK components
-#  -DVULKAN_SDK_CONFIG -- config.json that specifies repos/branches
-#  -DVULKAN_SDK_COMPONENTS -- which SDK components to install
-
-#  note: a Vulkan SDK config.json can be downloaded using the template:
+# CMAKE VARIABLES:
+#   VULKAN_SDK -- where to install SDK components
+#   VULKAN_SDK_CONFIG -- config.json that specifies repos/branches
+#   VULKAN_SDK_COMPONENTS -- SDK components to install
+#
+# A Vulkan SDK config.json may be downloaded using the template:
 #   https://vulkan.lunarg.com/sdk/config/VERSION/PLATFORM/config.json
-#  (see: https://vulkan.lunarg.com/content/view/latest-sdk-version-api)
+# See: https://vulkan.lunarg.com/content/view/latest-sdk-version-api
+#
+# For a list of available components, see a particular Vulkan SDK release.
 
 # NOTE: 3.19+ needed for JSON parsing
 cmake_minimum_required(VERSION 3.19)
@@ -26,7 +24,7 @@ if(NOT VULKAN_SDK_CONFIG)
 endif()
 if(NOT VULKAN_SDK_COMPONENTS)
   message(FATAL_ERROR
-    "Provide components -DVULKAN_SDK_COMPONENTS=<comma-separated list>\nAvailable: ${AVAILABLE_COMPONENTS}")
+    "Provide components -DVULKAN_SDK_COMPONENTS=<comma-separated list>")
 endif()
 
 project(VulkanSDKComponents)
@@ -41,6 +39,7 @@ function(setup_component PACKAGE_NAME)
     message(FATAL_ERROR "Could not read URL of ${PACKAGE_NAME}")
   endif()
   json_get(PACKAGE_DEPENDENCIES ${VULKAN_SDK_CONFIG_CONTENT} "repos" ${PACKAGE_NAME} "dependencies")
+  # TODO: Fix this function
   json_coalesce_subprops("${VULKAN_SDK_CONFIG_CONTENT}" ref "repos" "${PACKAGE_NAME}" PROPERTIES commit tag branch)
   set(PACKAGE_VERSION ${ref})
 
